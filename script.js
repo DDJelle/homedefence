@@ -9,8 +9,14 @@ let userMarker = null; // Marker for the user's current location
 // Initialize the map with OpenStreetMap tile layer
 const map = L.map('map', {
   zoom: 19, // Startzoom
-  maxZoom: 19 // Maximaal zoomniveau
+  maxZoom: 19, // Maximaal zoomniveau
+  zoomControl: false // Disable the default zoom control
 });
+
+// Add custom zoom control in the bottom right
+L.control.zoom({
+  position: 'bottomright'
+}).addTo(map);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -36,7 +42,7 @@ function getHexBoundary(hexId) {
 function toggleTransparency() {
   transparencyEnabled = !transparencyEnabled; // Wissel de status
   Object.values(hexagonLayers).forEach((polygon) => {
-    const newOpacity = transparencyEnabled ? 0 : 0.6; // Transparant of zichtbaar
+    const newOpacity = transparencyEnabled ? 0 : 0.8; // Transparant of zichtbaar
     polygon.setStyle({ fillOpacity: newOpacity });
   });
 }
@@ -47,12 +53,12 @@ document.getElementById('toggleButton').addEventListener('click', toggleTranspar
 // Function to show the color selector
 function showColorSelector(polygon, latlng, hexId) {
   if (transparencyEnabled) {
-    alert("Schakel de transparantie eerst uit om een kleur te kiezen.");
+    alert("Toggle build mode to place defensive structures in adjacent hexagons.");
     return;
   }
 
   if (!editableHexagons.includes(hexId)) {
-    alert("Je mag deze hexagoon niet aanpassen. Selecteer een aangrenzende hexagoon.");
+    alert("You're too far away! Go closer to be able to build something.");
     return;
   }
 
@@ -72,16 +78,23 @@ function setColor(color) {
   }
 }
 
+// Function to cancel color selection
+function cancelColorSelection() {
+  document.getElementById('colorSelector').style.display = 'none'; // Verberg het kleurmenu
+  selectedPolygon = null;
+}
+
 // Event listeners voor de kleurknoppen
 document.getElementById('blackButton').addEventListener('click', () => setColor('black'));
 document.getElementById('redButton').addEventListener('click', () => setColor('red'));
+document.getElementById('cancelButton').addEventListener('click', cancelColorSelection);
 
 // Overpass API helper function
 async function fetchRoads(bbox) {
   const query = `
     [out:json];
     (
-      way["highway"~"^(primary|secondary|tertiary|residential|service)$"](${bbox.south},${bbox.west},${bbox.north},${bbox.east});
+      way["highway"~"^(primary|secondary|tertiary|residential)$"](${bbox.south},${bbox.west},${bbox.north},${bbox.east});
     );
     out geom;
   `;
@@ -142,7 +155,7 @@ async function addRoadsToMap(bbox) {
       if (latlngs.length > 0) {
         L.polyline(latlngs, {
           color: "blue",
-          weight: 2
+          weight: 0
         }).addTo(map);
 
         roads.push(element);
@@ -175,12 +188,13 @@ async function generateHexagons(centerLat, centerLng) {
     if (boundary.length) {
       const isHexStreet = isStreet(boundary, roads);
       const fillColor = isHexStreet ? "white" : "brown";
+      const fillOpacity = transparencyEnabled ? 0 : 0.6;
 
       const polygon = L.polygon(boundary, {
         color: "black", // Randkleur
         weight: 1, // Dunne rand
         fillColor: fillColor, // Kleur afhankelijk van straat of gebouw
-        fillOpacity: 0.6, // Vul kleur
+        fillOpacity: fillOpacity, // Vul kleur
       }).addTo(map);
 
       hexagonLayers[hexId] = polygon;

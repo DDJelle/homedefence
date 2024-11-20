@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hexagon Grid</title>
+  <title>Home Defence</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
   <style>
@@ -39,10 +39,11 @@
 </head>
 <body>
   <div id="map"></div>
-  <button id="toggleButton">Show defences</button>
+  <button id="toggleButton">Toggle build mode</button>
   <div id="colorSelector">
     <button id="blackButton" style="background-color: black; color: white;">Build tower</button>
     <button id="redButton" style="background-color: red; color: white;">Build wall</button>
+    <button id="cancelButton" style="background-color: grey; color: white;">Cancel</button>
   </div>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/h3-js@3.7.2/dist/h3-js.umd.js"></script>
