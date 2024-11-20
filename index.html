@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hexagon Grid</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <style>
+    #map {
+      height: 100vh;
+    }
+    #toggleButton {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+      background-color: white;
+      border: 1px solid #ccc;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    #colorSelector {
+      position: absolute;
+      top: 50px;
+      left: 10px;
+      z-index: 1000;
+      background-color: white;
+      border: 1px solid #ccc;
+      padding: 10px;
+      display: none; /* Verborgen totdat een hexagoon wordt geklikt */
+    }
+    #colorSelector button {
+      margin: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <button id="toggleButton">Show defences</button>
+  <div id="colorSelector">
+    <button id="blackButton" style="background-color: black; color: white;">Build tower</button>
+    <button id="redButton" style="background-color: red; color: white;">Build wall</button>
+  </div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/h3-js@3.7.2/dist/h3-js.umd.js"></script>
+  <script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
